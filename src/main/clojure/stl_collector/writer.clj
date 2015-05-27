@@ -16,8 +16,7 @@
   [buffer vs]
   (let [{x :x
          y :y
-         z :z} vs
-         _ (println [x y z])]
+         z :z} vs]
     (.putFloat buffer (float x))
     (.putFloat buffer (float y))
     (.putFloat buffer (float z))
@@ -31,7 +30,8 @@
 (defn write-facet
   [buffer facet]
   (let [n  (write-vector buffer (:normal facet))
-        vs (map (partial write-vector buffer) (:vertices facet))]
+        vs (doall (for [v  (:vertices facet)]
+                     (write-vector buffer v)))]
     (pad buffer 2)))
 
 (defn calculate-file-size
