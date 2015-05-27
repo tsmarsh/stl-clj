@@ -1,7 +1,0 @@
-(ns stl-collector.core-test
-  (:require [clojure.test :refer :all]
-            [stl-collector.core :refer :all]))
-
-(deftest loads-file
-  (testing "FIXME, I fail."
-    (is (= 0 1))))

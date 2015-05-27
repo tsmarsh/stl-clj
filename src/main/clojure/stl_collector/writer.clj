@@ -3,8 +3,9 @@
    [stl-collector.model :as stl]
    [stl-collector.file :as stl-file]
    [clojure.java.io :as io]
-   [nio.core :as nio])
-
+   [nio.core :as nio]
+   [clojure.pprint :as pp])
+  
   (:import (java.nio ByteOrder)))
 
 (defn pad [buffer num_bytes]
@@ -12,30 +13,41 @@
     (.put buffer (byte 0))))
 
 (defn write-vector
-  [buffer
-   vs]
-  (doseq [v vs]
-    (.putFloat buffer (float v)))
-  (pad buffer 2))
+  [buffer vs]
+  (let [{x :x
+         y :y
+         z :z} vs
+         _ (println [x y z])]
+    (.putFloat buffer (float x))
+    (.putFloat buffer (float y))
+    (.putFloat buffer (float z))
+    [x y z]))
 
 (defn write-header
-  [buffer message count]
+  [buffer count]
   (pad buffer stl-file/MESSAGE_LENGTH)
   (.putInt buffer count))
+
+(defn write-facet
+  [buffer facet]
+  (let [n  (write-vector buffer (:normal facet))
+        vs (map (partial write-vector buffer) (:vertices facet))]
+    (pad buffer 2)))
+
+(defn calculate-file-size
+  [num_facets]
+  (+ stl-file/HEADER_LENGTH (* num_facets stl-file/BYTES_PER_FACET)))
 
 (defn write-stl
   [stl-seq ^String filename]
   (let [num_facets (count stl-seq)
         offset 0
-        length (+ stl-file/MESSAGE_LENGTH 4 (* num_facets stl-file/BYTES_PER_FACET))
-        buffer (doto (nio/mmap filename offset length)
-                  (.order ByteOrder/LITTLE_ENDIAN)
-                  (.asFloatBuffer))]
-    (write-header buffer "" num_facets)
-    (doseq [facet stl-seq]
-        (do 
-          (write-vector buffer (:normal stl-seq))
-          (map (partial write-vector buffer) (:vertices stl-seq))))))
+        length (calculate-file-size num_facets)]
+    (let [buffer (doto (nio/mmap filename offset length)
+                  (.order ByteOrder/LITTLE_ENDIAN))]
+      (write-header buffer num_facets)
+      (doseq [facet stl-seq]
+        (write-facet buffer facet)))))
 
 
 
