@@ -8,15 +8,6 @@
   
    (:import (java.nio ByteOrder DirectByteBuffer)))
 
-(defn ignore [^DirectByteBuffer buffer
-              ^Integer offset
-              ^Integer num_bytes]
-  (if (> num_bytes 0)
-    (do 
-      (.get buffer offset)
-      (recur buffer (inc offset) (dec num_bytes)))
-    offset))
-
 (defn read-vector
   [^DirectByteBuffer buffer
    ^Integer offset]
@@ -25,7 +16,6 @@
 
 (defn read-header
   [^DirectByteBuffer buffer]
-  (ignore buffer stl-file/MESSAGE_LENGTH 0)
   (.getInt buffer stl-file/MESSAGE_LENGTH))
 
 (defn read-facet
@@ -34,7 +24,6 @@
   (let [normal    (read-vector buffer offset)
         new_offset (+ offset 12)
         vertices  (for [n (range 3)] (read-vector buffer (+ new_offset (* 12 n))))]
-    (ignore buffer 2 (+ offset 16)) 
     (stl/->Facet  normal vertices)))
 
 (defn read-stl
