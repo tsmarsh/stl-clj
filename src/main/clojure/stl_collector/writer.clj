@@ -3,13 +3,9 @@
    [stl-collector.model :as stl]
    [stl-collector.file :as stl-file]
    [clojure.java.io :as io]
-   [nio.core :as nio]
-   [clojure.pprint :as pp])
+   [nio.core :as nio])
   
   (:import (java.nio ByteOrder DirectByteBuffer)))
-
-(defn calculate-offset [offset n size]
-  (+ offset (* n size)))
 
 (defn pad [buffer offset num_bytes]
   (if (> num_bytes 0)
@@ -33,7 +29,7 @@
 (defn write-header
   [buffer count]
   (pad buffer 0 stl-file/MESSAGE_LENGTH)
-  (.putInt buffer 0 count)
+  (.putInt buffer stl-file/MESSAGE_LENGTH count)
   stl-file/HEADER_LENGTH)
 
 (defn write-facet
@@ -48,11 +44,18 @@
         post_vertices_offset (process_vertices buffer
                                                post_normal_offset
                                                (:vertices facet))]
-    pad buffer post_vertices_offset 2))
+    (pad buffer post_vertices_offset 2)))
 
 (defn calculate-file-size
   [num_facets]
   (+ stl-file/HEADER_LENGTH (* num_facets stl-file/BYTES_PER_FACET)))
+
+(defn process-facets [buffer offset facets] 
+                               (if (seq facets)
+                                 (let [[f & fs] facets
+                                       new-offset (write-facet buffer offset f)]
+                                   (recur buffer new-offset fs))
+                                 offset))
 
 (defn write-stl
   [stl-seq ^String filename]
@@ -63,13 +66,7 @@
                                              offset
                                              length)
                                (.order ByteOrder/LITTLE_ENDIAN))
-          post-header-offset (write-header buffer num_facets)
-          process-facets     (fn [buffer offset facets]
-                               (if (seq facets)
-                                 (let [[f & fs] facets
-                                       new-offset (write-facet buffer offset f)]
-                                   (recur buffer new-offset fs))
-                                 offset))]
+          post-header-offset (write-header buffer num_facets)]
       (process-facets buffer post-header-offset stl-seq))))
 
 
