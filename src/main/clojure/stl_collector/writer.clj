@@ -3,51 +3,81 @@
    [stl-collector.model :as stl]
    [stl-collector.file :as stl-file]
    [clojure.java.io :as io]
-   [nio.core :as nio]
-   [clojure.pprint :as pp])
+   [nio.core :as nio])
   
-  (:import (java.nio ByteOrder)))
+  (:import (java.nio ByteOrder DirectByteBuffer)))
 
-(defn pad [buffer num_bytes]
-  (doseq [_ (range num_bytes)]
-    (.put buffer (byte 0))))
+(set! *warn-on-reflection* true)
+
+(defn pad [^DirectByteBuffer buffer
+           ^Integer offset
+           ^Integer num_bytes]
+  (if (> num_bytes 0)
+    (do 
+      (.put buffer offset (byte 0))
+      (recur buffer (inc offset) (dec num_bytes)))
+    offset))
+
+(defn put-floats [^DirectByteBuffer buffer
+                  ^Integer o
+                  vs]
+  (if (seq vs)
+    (let [[v & vss] vs]
+      (.putFloat buffer o v)
+      (recur buffer (+ o 4) vss))
+    o))
 
 (defn write-vector
-  [buffer vs]
-  (let [{x :x
-         y :y
-         z :z} vs]
-    (.putFloat buffer (float x))
-    (.putFloat buffer (float y))
-    (.putFloat buffer (float z))
-    [x y z]))
+  [^DirectByteBuffer buffer
+   ^Integer offset vertex]
+  (let [values ((juxt :x :y :z) vertex)]
+    (put-floats buffer offset values)))
 
 (defn write-header
-  [buffer count]
-  (pad buffer stl-file/MESSAGE_LENGTH)
-  (.putInt buffer count))
+  [^DirectByteBuffer buffer
+   ^Integer count]
+
+  (pad buffer 0 stl-file/MESSAGE_LENGTH)
+  (.putInt buffer stl-file/MESSAGE_LENGTH count)
+  stl-file/HEADER_LENGTH)
 
 (defn write-facet
-  [buffer facet]
-  (let [n  (write-vector buffer (:normal facet))
-        vs (doall (for [v  (:vertices facet)]
-                     (write-vector buffer v)))]
-    (pad buffer 2)))
+  [^DirectByteBuffer buffer
+   ^Integer offset facet]
+  (let [post_normal_offset (write-vector buffer offset (:normal facet))
+        process_vertices (fn [buffer offset facets]
+                           (if (seq facets)
+                             (let [[f & fs] facets
+                                   new_offset (write-vector buffer offset f)]
+                               (recur buffer new_offset fs))
+                             offset))
+        post_vertices_offset (process_vertices buffer
+                                               post_normal_offset
+                                               (:vertices facet))]
+    (pad buffer post_vertices_offset 2)))
 
 (defn calculate-file-size
-  [num_facets]
+  [^Integer num_facets]
   (+ stl-file/HEADER_LENGTH (* num_facets stl-file/BYTES_PER_FACET)))
+
+(defn process-facets [^DirectByteBuffer buffer offset facets] 
+                               (if (seq facets)
+                                 (let [[f & fs] facets
+                                       new-offset (write-facet buffer offset f)]
+                                   (recur buffer new-offset fs))
+                                 offset))
 
 (defn write-stl
   [stl-seq ^String filename]
   (let [num_facets (count stl-seq)
         offset 0
         length (calculate-file-size num_facets)]
-    (let [buffer (doto (nio/mmap filename offset length)
-                  (.order ByteOrder/LITTLE_ENDIAN))]
-      (write-header buffer num_facets)
-      (doseq [facet stl-seq]
-        (write-facet buffer facet)))))
+    (let [buffer (doto (nio/mmap filename
+                                 offset
+                                 length)
+                   (.order ByteOrder/LITTLE_ENDIAN))
+          post-header-offset (write-header buffer num_facets)]
+      (process-facets buffer post-header-offset stl-seq))))
 
 
 
