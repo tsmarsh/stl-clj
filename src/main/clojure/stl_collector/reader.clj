@@ -33,7 +33,6 @@
   [filename]
   (let [buffer (doto (nio/mmap filename)
                  (.order ByteOrder/LITTLE_ENDIAN))]
-    (let [num_facets (read-header buffer)
-          _ (print num_facets)]
+    (let [num_facets (read-header buffer)]
       (for [_ (range num_facets)]
         (read-facet buffer)))))

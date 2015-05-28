@@ -14,17 +14,17 @@
       (recur buffer (inc offset) (dec num_bytes)))
     offset))
 
+(defn put-floats [buffer o vs]
+  (if (seq vs)
+    (let [[v & vss] vs]
+      (.putFloat buffer o v)
+      (recur buffer (+ o 4) vss))
+    o))
+
 (defn write-vector
   [^DirectByteBuffer buffer ^Integer offset vertex]
-  (let [{x :x y :y z :z} vertex
-        values [x y z]
-        put-float (fn [o vs]
-                    (if (seq vs)
-                      (let [[v & vss] vs]
-                        (.putFloat buffer o v)
-                        (recur (+ o 4) vss))
-                      o))]
-    (put-float offset values)))
+  (let [values ((juxt :x :y :z) vertex)]
+    (put-floats buffer offset values)))
 
 (defn write-header
   [buffer count]
@@ -62,10 +62,10 @@
   (let [num_facets (count stl-seq)
         offset 0
         length (calculate-file-size num_facets)]
-    (let [buffer             (doto (nio/mmap filename
-                                             offset
-                                             length)
-                               (.order ByteOrder/LITTLE_ENDIAN))
+    (let [buffer (doto (nio/mmap filename
+                                 offset
+                                 length)
+                   (.order ByteOrder/LITTLE_ENDIAN))
           post-header-offset (write-header buffer num_facets)]
       (process-facets buffer post-header-offset stl-seq))))
 
