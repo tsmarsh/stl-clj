@@ -1,5 +1,7 @@
-(ns stl-collector.model)
+(ns stl-collector.model
+  (:require [schema.core :as s]))
 
-(defrecord Vertex [x  y  z])
+(def Vertex [ (s/one Float "x") (s/one Float "y") (s/one Float "z")])
 
-(defrecord Facet [^Vertex normal vertices])
+(def Facet {:normal Vertex
+            :vertices [(s/one Vertex "xs") (s/one Vertex "ys") (s/one Vertex "zs")]})

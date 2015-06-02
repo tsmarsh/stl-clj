@@ -1,34 +1,33 @@
 (ns stl-collector.reader
   (:require
+   [stl-collector.model :as m]
    [stl-collector.file :as stl-file]
    [clojure.java.io :as io]
    [nio.core :as nio]
-   [clojure.pprint :as pp])
+   [schema.core :as s])
   
    (:import (java.nio ByteOrder DirectByteBuffer)))
 
-(set! *warn-on-reflection* true)
-
-(defn read-vector
-  [^DirectByteBuffer buffer
-   ^Integer offset]
+(s/defn read-vector :- m/Vertex
+  [buffer :- DirectByteBuffer
+   offset :- s/Int]
   (for [n (range 3)]
     (.getFloat buffer (+ offset (* 4 n)))))
 
-(defn read-header
-  [^DirectByteBuffer buffer]
+(s/defn read-header :- s/Int
+  [buffer :- DirectByteBuffer]
   (.getInt buffer stl-file/MESSAGE_LENGTH))
 
-(defn read-facet
-  [^DirectByteBuffer buffer
-   ^Integer offset]
+(s/defn read-facet :- m/Facet
+  [buffer :- DirectByteBuffer
+   offset :- s/Int]
   (let [normal    (read-vector buffer offset)
         new_offset (+ offset 12)
         vertices  (for [n (range 3)] (read-vector buffer (+ new_offset (* 12 n))))]
     {:normal normal :vertices vertices}))
 
-(defn read-stl
-  [filename]
+(s/defn read-stl :- [Facet]
+  [filename :- s/Str]
   (let [buffer (doto (nio/mmap filename)
                  (.order ByteOrder/LITTLE_ENDIAN))]
     (let [num_facets (read-header buffer)]
