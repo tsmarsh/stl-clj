@@ -55,5 +55,5 @@
           read-file (r/read-stl real-file)
           write-file (w/write-stl read-file tmp-file)
           new-read-file (r/read-stl tmp-file)]
-      (= read-file new-read-file)
+      (is (= read-file new-read-file))
       (.delete tmp-file)))) 
