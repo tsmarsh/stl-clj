@@ -3,9 +3,12 @@
             [stl-collector.reader :as r]
             [stl-collector.writer :as w]
             [nio.core :as nio]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [schema.test :as st])
   (:import (java.nio ByteOrder)
            (java.io File)))
+
+(use-fixtures :once st/validate-schemas)
 
 (deftest test-rw-float
   (testing "Can read and write floats"
