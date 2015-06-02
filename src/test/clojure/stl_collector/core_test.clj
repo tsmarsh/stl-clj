@@ -1,9 +1,11 @@
 (ns stl-collector.core-test
   (:require [clojure.test :refer :all]
-            [stl-collector.core :refer :all]
+            [stl-collector.reader :as r]
+            [stl-collector.writer :as w]
             [nio.core :as nio]
             [clojure.java.io :as io])
-  (:import (java.nio ByteOrder)))
+  (:import (java.nio ByteOrder)
+           (java.io File)))
 
 (deftest test-rw-float
   (testing "Can read and write floats"
@@ -43,3 +45,14 @@
           (.get buffer))
         
         (is (= v (.getFloat buffer)))))))
+
+(deftest test-rw-stl-file
+  (testing "can read and write a real file"
+    (let [tmp-file (File/createTempFile "bob" ".stl")
+          real-file (->> "stl/Creeper.stl"
+                         io/resource
+                         io/file) 
+          read-file (r/read-stl real-file)
+          write-file (w/write-stl read-file tmp-file)
+          new-read-file (r/read-stl tmp-file)]
+      (= read-file new-read-file)))) 
