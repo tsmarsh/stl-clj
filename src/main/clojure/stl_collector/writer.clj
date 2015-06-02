@@ -1,6 +1,5 @@
 (ns stl-collector.writer
   (:require
-   [stl-collector.model :as stl]
    [stl-collector.file :as stl-file]
    [clojure.java.io :as io]
    [nio.core :as nio])
@@ -29,9 +28,9 @@
 
 (defn write-vector
   [^DirectByteBuffer buffer
-   ^Integer offset vertex]
-  (let [values ((juxt :x :y :z) vertex)]
-    (put-floats buffer offset values)))
+   ^Integer offset
+   values]
+  (put-floats buffer offset values))
 
 (defn write-header
   [^DirectByteBuffer buffer
