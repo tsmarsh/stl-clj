@@ -6,27 +6,24 @@
    [nio.core :as nio]
    [clojure.pprint :as pp])
   
-   (:import (java.nio ByteOrder)))
-
-(defn ignore [buffer num_bytes]
-  (dotimes [_ num_bytes]
-    (.get buffer)))
+   (:import (java.nio ByteOrder DirectByteBuffer)))
 
 (defn read-vector
-  [buffer]
-  (let [[x y z] (doall (for [_ (range 3)] (.getFloat buffer)))]
+  [^DirectByteBuffer buffer
+   ^Integer offset]
+  (let [[x y z] (for [n (range 3)] (.getFloat buffer (+ offset (* 4 n))))]
     (stl/->Vertex x y z)))
 
 (defn read-header
-  [buffer]
-  (ignore buffer stl-file/MESSAGE_LENGTH)
-  (.getInt buffer))
+  [^DirectByteBuffer buffer]
+  (.getInt buffer stl-file/MESSAGE_LENGTH))
 
 (defn read-facet
-  [buffer]
-  (let [normal    (read-vector buffer)
-        vertices  (doall (for [_ (range 3)] (read-vector buffer)))]
-    (ignore buffer 2) 
+  [^DirectByteBuffer buffer
+   ^Integer offset]
+  (let [normal    (read-vector buffer offset)
+        new_offset (+ offset 12)
+        vertices  (for [n (range 3)] (read-vector buffer (+ new_offset (* 12 n))))]
     (stl/->Facet  normal vertices)))
 
 (defn read-stl
@@ -34,5 +31,7 @@
   (let [buffer (doto (nio/mmap filename)
                  (.order ByteOrder/LITTLE_ENDIAN))]
     (let [num_facets (read-header buffer)]
-      (for [_ (range num_facets)]
-        (read-facet buffer)))))
+      (for [n (range num_facets)]
+        (read-facet buffer
+                    (+ stl-file/HEADER_LENGTH
+                       (* n stl-file/BYTES_PER_FACET)))))))
