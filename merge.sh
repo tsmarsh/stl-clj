@@ -5,5 +5,5 @@ echo $floop > key
 chmod 600 key
 ssh-add key
 git checkout master || exit
-git merge "$TRAVIS_COMMIT"
-git push 
+git merge "$TRAVIS_COMMIT" || exit
+git push
