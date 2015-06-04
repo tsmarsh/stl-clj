@@ -5,24 +5,37 @@
 
 (use-fixtures :once st/validate-schemas)
 
+(deftest normal
+  (testing "calculate the normal of the origin"
+    (let [v [[0.0 0.0 0.0]
+             [0.0 0.0 0.0]
+             [0.0 0.0 0.0]]]
+      (is (= [0.0 0.0 0.0] (t/normal v)))))
+  
+  (testing "calculate an interesting normal"
+    (let [v  [[74.60932159423828 53.5815315246582 4.022638320922852]
+             [74.60932159423828 53.5815315246582 5.902111053466797]
+             [74.6712875366211 49.58250045776367 4.022638320922852]]]
+      (is (= [7.516069846824394 0.11646329905488528 -0.0] (t/normal v))))))
+
 (deftest maximum
   (testing "no maximum" 
-    (let [vertices [[(float 0)(float 0)(float 0)]]]
-      (is (= [0.0 00. 0.0] (t/maxima vertices)))))
+    (let [vertices [[0.0 0.0 0.0]]]
+      (is (= [0.0 0.0 0.0] (t/maxima vertices)))))
   (testing "a maximum"
-    (let [vertices [[(float 1) (float 8) (float 3)]
-                    [(float 4) (float 5) (float 9)]
-                    [(float 7) (float 2) (float 6)]]]
+    (let [vertices [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]]]
       (is (= [7.0 8.0 9.0] (t/maxima vertices))))))
 
 (deftest minimum
   (testing "no minimum"
-    (let [vertices [[(float 0)(float 0)(float 0)]]]
+    (let [vertices [[0.0 0.0 0.0]]]
       (is (= [0.0 0.0 0.0] (t/minima vertices)))))
   
   (testing "a minimum"
-    (let [vertices [[(float 1) (float 8) (float 3)]
-                    [(float 4) (float 5) (float 9)]
-                    [(float 7) (float 2) (float 6)]]]
+    (let [vertices  [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]]]
       (is (= [1.0 2.0 3.0] (t/minima vertices))))))
 

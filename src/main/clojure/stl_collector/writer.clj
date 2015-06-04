@@ -26,7 +26,7 @@
    vs     :- m/Vertex]
   (if (seq vs)
     (let [[v & vss] vs]
-      (.putFloat buffer o v)
+      (.putFloat buffer o (float v))
       (recur buffer (+ o 4) vss))
     o))
 
@@ -68,11 +68,11 @@
   [buffer :- DirectByteBuffer
    offset :- s/Int
    facets :- [m/Facet]] 
-                               (if (seq facets)
-                                 (let [[f & fs] facets
-                                       new-offset (write-facet buffer offset f)]
-                                   (recur buffer new-offset fs))
-                                 offset))
+  (if (seq facets)
+    (let [[f & fs] facets
+          new-offset (write-facet buffer offset f)]
+      (recur buffer new-offset fs))
+    offset))
 
 (s/defn write-stl :- s/Int
   [stl-seq :- [m/Facet]
