@@ -7,7 +7,7 @@ after_success:
   - chmod 600 key
   - ssh-add key
   - echo "Checking out master"
-  - git checkout master || exit
+  - git checkout origin/master || exit
   - echo "merging"
   - git merge "$TRAVIS_COMMIT" || exit
   - echo "Success!"
