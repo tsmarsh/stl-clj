@@ -12,3 +12,6 @@ pom.xml.asc
 .idea
 .DS_Store
 stl_collector.iml
+*~
+\#*\#
+.\#*
