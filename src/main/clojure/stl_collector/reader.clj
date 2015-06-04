@@ -12,7 +12,7 @@
   [buffer :- DirectByteBuffer
    offset :- s/Int]
   (for [n (range 3)]
-    (.getFloat buffer (+ offset (* 4 n)))))
+    (double (.getFloat buffer (+ offset (* 4 n))))))
 
 (s/defn read-header :- s/Int
   [buffer :- DirectByteBuffer]
