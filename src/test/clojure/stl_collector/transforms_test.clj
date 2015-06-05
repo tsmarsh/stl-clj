@@ -39,3 +39,33 @@
                     [7.0 2.0 6.0]]]
       (is (= [1.0 2.0 3.0] (t/minima vertices))))))
 
+(deftest translation
+  (testing "can move a model in the x axis"
+    (let [vertices  [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]]
+          expected [[4.0 8.0 3.0]
+                    [7.0 5.0 9.0]
+                    [10.0 2.0 6.0]]]
+      (is (= expected
+             (t/translate vertices [3.0 0.0 0.0])))))
+
+  (testing "can move a model in the y axis"
+    (let [vertices  [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]]
+          expected [[1.0 11.0 3.0]
+                    [4.0 8.0 9.0]
+                    [7.0 5.0 6.0]]]
+      (is (= expected
+             (t/translate vertices [0.0 3.0 0.0])))))
+  
+  (testing "can move a model in the z axis"
+    (let [vertices [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]]
+          expected [[1.0 8.0 6.0]
+                    [4.0 5.0 12.0]
+                    [7.0 2.0 9.0]]]
+      (is (= expected
+             (t/translate vertices [0.0 0.0 3.0]))))))

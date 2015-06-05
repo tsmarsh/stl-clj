@@ -21,3 +21,8 @@
 (s/defn minima :- m/Vertex
   [vertexes :- [m/Vertex]]
   (map (partial apply min) (columise vertexes)))
+
+(s/defn translate :- [m/Vertex]
+  [vertexes :- [m/Vertex]
+   d :- m/Vertex]
+  (x/+ d vertexes))
