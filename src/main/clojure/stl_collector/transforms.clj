@@ -32,7 +32,7 @@
   [vertexes :- [m/Vertex]]
   [(minima vertexes) (maxima vertexes)])
 
-(s/defn bounding-cube :- (s/one m/Vertex "cube")
+(s/defn bounding-cube :- m/Vertex
   [vertexes :- [m/Vertex]]
   (apply x/- (reverse (dimensions vertexes))))
 
