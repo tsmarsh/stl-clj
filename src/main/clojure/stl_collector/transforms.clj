@@ -26,3 +26,13 @@
   [vertexes :- [m/Vertex]
    d :- m/Vertex]
   (x/+ d vertexes))
+
+(s/defn dimensions :- [(s/one m/Vertex "min")
+                       (s/one m/Vertex "max")]
+  [vertexes :- [m/Vertex]]
+  [(minima vertexes) (maxima vertexes)])
+
+(s/defn bounding-cube :- (s/one m/Vertex "cube")
+  [vertexes :- [m/Vertex]]
+  (apply x/- (reverse (dimensions vertexes))))
+
