@@ -72,3 +72,16 @@
                      [7.0 2.0 6.0]]
             expected [6.0 6.0 6.0]]
         (is (= expected (t/bounding-cube vertices))))))
+
+(deftest combine
+  (testing "can combine two stl files into one"
+    (let [stl [[1.0 8.0 3.0]
+               [4.0 5.0 9.0]
+               [7.0 2.0 6.0]]
+          expected [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]
+                    [8.0 8.0 3.0]
+                    [11.0 5.0 9.0]
+                    [14.0 2.0 6.0]]]
+      (is (= expected (t/combine-x [stl stl] 1.0))))))
