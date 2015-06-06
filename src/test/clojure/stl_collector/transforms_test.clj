@@ -5,8 +5,15 @@
 
 (use-fixtures :once st/validate-schemas)
 
+(deftest normalize
+  (testing "finds the normal of a vertex"
+    (let [v [[1.0 8.0 3.0]
+             [4.0 5.0 9.0]
+             [7.0 2.0 6.0]]]
+      (is (= [27.0 27.0 0.0] (t/normal v))))))
+
 (deftest maximum
-  (testing "no maximum" 
+  (testing " no maximum" 
     (let [vertices [[0.0 0.0 0.0]]]
       (is (= [0.0 00. 0.0] (t/maxima vertices)))))
   (testing "a maximum"
