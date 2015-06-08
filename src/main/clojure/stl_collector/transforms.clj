@@ -68,3 +68,7 @@
   [vertex :- [[m/Vertex]]
    gap :- Double]
   (distribute vertex gap 2))
+
+(s/defn combine :- [m/Vertex]
+  [stls :- [[m/Vertex]]]
+  (apply concat stls))

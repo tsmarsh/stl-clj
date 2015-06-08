@@ -112,3 +112,16 @@
       (is (= expected-x (t/distribute-x [stl stl stl stl] 1.0)))
       (is (= expected-y (t/distribute-y [stl stl stl stl] 1.0)))
       (is (= expected-z (t/distribute-z [stl stl stl stl] 1.0))))))
+
+(deftest combine
+  (testing "combines multiple stl files into one"
+    (let [stl [[1.0 8.0 3.0]
+               [4.0 5.0 9.0]
+               [7.0 2.0 6.0]]
+          expected [[1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]
+                    [1.0 8.0 3.0]
+                    [4.0 5.0 9.0]
+                    [7.0 2.0 6.0]]]
+      (is (= expected (t/combine [stl stl]))))))
