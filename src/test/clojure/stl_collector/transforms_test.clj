@@ -80,15 +80,24 @@
             expected [6.0 6.0 6.0]]
         (is (= expected (t/bounding-cube vertices))))))
 
-(deftest combine
-  (testing "can combine two stl files into one"
+(deftest distribution
+  (testing "can distribute two stl files across and axis"
     (let [stl [[1.0 8.0 3.0]
                [4.0 5.0 9.0]
                [7.0 2.0 6.0]]
-          expected [[1.0 8.0 3.0]
-                    [4.0 5.0 9.0]
-                    [7.0 2.0 6.0]
-                    [8.0 8.0 3.0]
-                    [11.0 5.0 9.0]
-                    [14.0 2.0 6.0]]]
-      (is (= expected (t/combine-x [stl stl] 1.0))))))
+          expected [[[1.0 8.0 3.0]
+                     [4.0 5.0 9.0]
+                     [7.0 2.0 6.0]]
+                    [[8.0 8.0 3.0]
+                     [11.0 5.0 9.0]
+                     [14.0 2.0 6.0]]]]
+      (is (= expected (t/distribute-x [stl stl] 1.0)))))
+  (testing "can distribute N stl across an axis"
+    (let [stl [[1.0 8.0 3.0]
+               [4.0 5.0 9.0]
+               [7.0 2.0 6.0]]
+          expected [[[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]
+                    [[8.0 8.0 3.0] [11.0 5.0 9.0] [14.0 2.0 6.0]]
+                    [[15.0 8.0 3.0] [18.0 5.0 9.0] [21.0 2.0 6.0]]
+                    [[22.0 8.0 3.0] [25.0 5.0 9.0] [28.0 2.0 6.0]]]]
+      (is (= expected (t/distribute-x [stl stl stl stl] 1.0))))))
