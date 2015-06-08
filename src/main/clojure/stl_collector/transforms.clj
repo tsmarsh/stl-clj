@@ -36,18 +36,25 @@
   [vertexes :- [m/Vertex]]
   (apply x/- (reverse (dimensions vertexes))))
 
-(s/defn distribute-x :- [[m/Vertex]]
+
+(s/defn distribute :- [[m/Vertex]]
   [vertex :- [[m/Vertex]]
-   gap :- Double]
+   gap :- Double
+   dimension :- s/Int]
   (loop [[m1 m2 & ms] vertex
          offset 0
          stl [m1]]
-    (let [[width _ _] (bounding-cube m1)
+    (let [width (get (bounding-cube m1) dimension)
           offset' (+ offset width gap)
-          translation-matrix [offset' 0.0 0.0] 
+          translation-matrix  (assoc [0.0 0.0 0.0] dimension offset')
           m2' (translate m2 translation-matrix)]
       (if (seq ms)
         (recur (cons m2' ms)
                offset'
                (conj stl m2'))
         (conj stl m2')))))
+
+(s/defn distribute-x :- [[m/Vertex]]
+  [vertex :- [[m/Vertex]]
+   gap :- Double]
+  (distribute vertex gap 0))
