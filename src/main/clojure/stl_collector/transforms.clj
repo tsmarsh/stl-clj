@@ -58,3 +58,13 @@
   [vertex :- [[m/Vertex]]
    gap :- Double]
   (distribute vertex gap 0))
+
+(s/defn distribute-y :- [[m/Vertex]]
+  [vertex :- [[m/Vertex]]
+   gap :- Double]
+  (distribute vertex gap 1))
+
+(s/defn distribute-z :- [[m/Vertex]]
+  [vertex :- [[m/Vertex]]
+   gap :- Double]
+  (distribute vertex gap 2))
