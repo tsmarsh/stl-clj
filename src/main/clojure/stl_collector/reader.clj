@@ -26,7 +26,7 @@
         vertices  (for [n (range 3)] (read-vector buffer (+ new_offset (* 12 n))))]
     {:normal normal :vertices vertices}))
 
-(s/defn read-stl :- [m/Facet]
+(s/defn read-stl :- m/STL
   [filename]
   (let [buffer (doto (nio/mmap filename)
                  (.order ByteOrder/LITTLE_ENDIAN))]

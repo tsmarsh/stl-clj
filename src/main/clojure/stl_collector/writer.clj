@@ -75,7 +75,7 @@
     offset))
 
 (s/defn write-stl :- s/Int
-  [stl-seq :- [m/Facet]
+  [stl-seq :- m/STL
    filename]
   (let [num_facets (count stl-seq)
         offset 0
