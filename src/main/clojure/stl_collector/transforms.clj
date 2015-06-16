@@ -7,38 +7,39 @@
 (s/defn columise :- [(s/one [Double] "1s")
                      (s/one [Double] "2s")
                      (s/one [Double] "3s")]
-  [vertexes :- [m/Vertex]]
-  (apply map vector vertexes))
+  [vertexes :- [m/Face]]
+  (apply map vector  (partition 3 (flatten vertexes))))
 
 (s/defn normal :- m/Vertex
   [[p0 p1 p2] :- m/Face]
   (mp/cross-product (x/- p1 p0) (x/- p2 p0)))
 
 (s/defn maxima :- m/Vertex
-  [vertexes :- [m/Vertex]]
-  (map (partial apply max) (columise vertexes)))
+  [vertexes :- [m/Face]]
+  (let [columns (columise vertexes)]
+    (map (partial apply max) columns)))
 
 (s/defn minima :- m/Vertex
-  [vertexes :- [m/Vertex]]
+  [vertexes :- [m/Face]]
   (map (partial apply min) (columise vertexes)))
 
-(s/defn translate :- [m/Vertex]
-  [vertexes :- [m/Vertex]
+(s/defn translate :- [m/Face]
+  [vertexes :- [m/Face]
    d :- m/Vertex]
   (x/+ d vertexes))
 
 (s/defn dimensions :- [(s/one m/Vertex "min")
                        (s/one m/Vertex "max")]
-  [vertexes :- [m/Vertex]]
+  [vertexes :- [m/Face]]
   [(minima vertexes) (maxima vertexes)])
 
 (s/defn bounding-cube :- m/Vertex
-  [vertexes :- [m/Vertex]]
+  [vertexes :- [m/Face]]
   (apply x/- (reverse (dimensions vertexes))))
 
 
-(s/defn distribute :- [[m/Vertex]]
-  [vertex :- [[m/Vertex]]
+(s/defn distribute :- [[m/Face]]
+  [vertex :- [[m/Face]]
    gap :- Double
    dimension :- s/Int]
   (loop [[m1 m2 & ms] vertex
@@ -54,21 +55,27 @@
                (conj stl m2'))
         (conj stl m2')))))
 
-(s/defn distribute-x :- [[m/Vertex]]
-  [vertex :- [[m/Vertex]]
+(s/defn distribute-x :- [[m/Face]]
+  [vertex :- [[m/Face]]
    gap :- Double]
   (distribute vertex gap 0))
 
-(s/defn distribute-y :- [[m/Vertex]]
-  [vertex :- [[m/Vertex]]
+(s/defn distribute-y :- [[m/Face]]
+  [vertex :- [[m/Face]]
    gap :- Double]
   (distribute vertex gap 1))
 
-(s/defn distribute-z :- [[m/Vertex]]
-  [vertex :- [[m/Vertex]]
+(s/defn distribute-z :- [[m/Face]]
+  [vertex :- [[m/Face]]
    gap :- Double]
   (distribute vertex gap 2))
 
-(s/defn combine :- [m/Vertex]
-  [stls :- [[m/Vertex]]]
+(s/defn combine :- [m/Face]
+  [stls :- [[m/Face]]]
   (apply concat stls))
+
+(s/defn normalize :- [m/Facet]
+  [vertices :- [[m/Face]]]
+  (for [face vertices]
+    {:normal (normal face)
+     :vertices vertices}))
