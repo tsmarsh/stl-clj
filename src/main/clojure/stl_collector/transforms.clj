@@ -10,6 +10,10 @@
   [vertexes :- [m/Face]]
   (apply map vector  (partition 3 (flatten vertexes))))
 
+(s/defn facify :- [m/Face]
+  [stl :- m/STL]
+  (map :vertices stl))
+
 (s/defn normal :- m/Vertex
   [[p0 p1 p2] :- m/Face]
   (mp/cross-product (x/- p1 p0) (x/- p2 p0)))
