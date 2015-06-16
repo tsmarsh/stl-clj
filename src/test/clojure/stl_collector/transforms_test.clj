@@ -14,6 +14,20 @@
              [7.0 2.0 6.0]]]
       (is (= [27.0 27.0 0.0] (t/normal v))))))
 
+(deftest facification
+  (testing "turns an stl into something that is useful"
+    (let [facet {:normal [0.0 0.0 0.0]
+                 :vertices [[1.0 2.0 3.0]
+                            [4.0 5.0 6.0]
+                            [7.0 8.0 9.0]]}
+          expected [[[1.0 2.0 3.0]
+                     [4.0 5.0 6.0]
+                     [7.0 8.0 9.0]]
+                    [[1.0 2.0 3.0]
+                     [4.0 5.0 6.0]
+                     [7.0 8.0 9.0]]]]
+      (is (= expected (t/facify [facet facet]))))))
+
 (deftest maximum
   (testing " no maximum" 
     (let [face [[0.0 0.0 0.0]
