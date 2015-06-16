@@ -14,6 +14,12 @@
   [[p0 p1 p2] :- m/Face]
   (mp/cross-product (x/- p1 p0) (x/- p2 p0)))
 
+(s/defn normalize :- [m/Facet]
+  [vertices :- [m/Face]]
+  (for [face vertices]
+    {:normal (normal face)
+     :vertices face}))
+
 (s/defn maxima :- m/Vertex
   [vertexes :- [m/Face]]
   (let [columns (columise vertexes)]
@@ -73,9 +79,3 @@
 (s/defn combine :- [m/Face]
   [stls :- [[m/Face]]]
   (apply concat stls))
-
-(s/defn normalize :- [m/Facet]
-  [vertices :- [[m/Face]]]
-  (for [face vertices]
-    {:normal (normal face)
-     :vertices vertices}))
