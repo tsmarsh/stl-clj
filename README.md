@@ -5,15 +5,34 @@ A Clojure library designed aid the manipulation of STL files.
 Ultimate aim is to make it trivial to collect and flatten multiple
 stls into a single stl file.
 
+Current status:
+
+* Read binary stl
+* Write binary stl
+* Linear translation of stls
+* Combination of multiple stl into a single file
+
+Planning on creating an app that simplifies the process using this
+library.
+
 ## Usage
 
-from core you can do something like this:
+This code takes filenames as input, reads in the stl files,
+distributes them across the x axis with a 10 gap, then combines them
+into a single file.
 
 ```
-(w/write-stl (r/read-stl "in.stl") "out.stl")
+(defn combine-files [output & filenames]
+  (let [stls (map r/read-stl filenames)
+        faces (map t/facify stls)
+        distributed-faces (t/distribute-x faces 10)
+        recombined-faces (t/combine distributed-faces)
+        normalized-faces (t/normalize recombined-faces)]
+    (w/write-stl normalized-faces output)))
 ```
 
-More functionality to follow
+It is possible that more convienience functions like this will emerge
+as more real world use happens.
 
 ## License
 Copyright © 2015 T S MARSH
