@@ -134,9 +134,16 @@
                      [7.0 2.0 6.0]]]]
       (is (= expected (t/combine [stl stl]))))))
 
-#_(deftest normalizing
+(deftest normalizing
   (testing "takes a list of faces and create a list of facets"
-    (let [stl [[1.0 8.0 3.0]
-               [4.0 5.0 9.0]
-               [7.0 2.0 6.0]]]
-      (is (= {} (t/normalize stl))))))
+    (let [stl [[[1.0 8.0 3.0]
+                 [4.0 5.0 9.0]
+                 [7.0 2.0 6.0]]
+               [[2.0 9.0 4.0]
+                 [5.0 6.0 7.0]
+                 [8.0 3.0 7.0]]]]
+      (is (= [{:normal [27.0 27.0 0.0],
+               :vertices [[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]}
+              {:normal [9.0 9.0 0.0],
+               :vertices [[2.0 9.0 4.0] [5.0 6.0 7.0] [8.0 3.0 7.0]]}]
+             (t/normalize stl))))))
