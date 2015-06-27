@@ -6,7 +6,7 @@
    [nio.core :as nio]
    [schema.core :as s])
   
-   (:import (java.nio ByteOrder DirectByteBuffer)))
+  (:import (java.nio ByteOrder DirectByteBuffer)))
 
 (s/defn read-vector :- m/Vertex
   [buffer :- DirectByteBuffer

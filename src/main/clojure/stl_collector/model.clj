@@ -2,7 +2,7 @@
   (:require [schema.core :as s]))
 
 ;; [0.0 0.0 0.0] 
-(def Vertex [ (s/one Double "x") (s/one Double "y") (s/one Double "z")])
+(def Vertex [(s/one Double "x") (s/one Double "y") (s/one Double "z")])
 
 ;;[[0.0 0.0 0.0]
 ;;  [0.0 0.0 0.0]

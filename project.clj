@@ -12,4 +12,5 @@
   :source-paths ["src/main/clojure"]
   :test-paths ["src/test/clojure"]
   :repositories [["lib" "file:lib"]]
-  :plugins [[lein-cloverage "1.0.6"]])
+  :plugins [[lein-cloverage "1.0.6"]
+            [lein-cljfmt "0.1.10"]])

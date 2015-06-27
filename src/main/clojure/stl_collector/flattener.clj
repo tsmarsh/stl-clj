@@ -7,7 +7,7 @@
   [container :- m/Vertex
    object :- m/Vertex]
   (= 0 (->> (map - container object)
-            (filter (partial > 0 ))
+            (filter (partial > 0))
             count)))
 
 (s/defn package :- [m/Face]
@@ -32,7 +32,7 @@
   (let [faces (t/facify f)
         cube (t/bounding-cube faces)]
     (t/normalize (if (fit machine cube) 
-                    (if (seq stls)
-                      (package stls buffer machine faces)
-                      faces)
-                    []))))
+                   (if (seq stls)
+                     (package stls buffer machine faces)
+                     faces)
+                   []))))
