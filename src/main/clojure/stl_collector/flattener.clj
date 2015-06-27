@@ -17,13 +17,20 @@
    d :- [m/Face]]
   (let [sf (t/facify s)
         dx (t/distribute-x [d sf] buffer)
-        c (t/combine dx)
-        cube (t/bounding-cube c)]
-    (if (fit machine cube)
+        cx (t/combine dx)
+        cubex (t/bounding-cube cx)]
+    (if (fit machine cubex)
       (if (seq stls)
-        (recur stls buffer machine c)
-        c)
-      d)))
+        (recur stls buffer machine cx)
+        cx)
+      (let [dz (t/distribute-z [d sf] buffer)
+            cz (t/combine dz)
+            cubez (t/bounding-cube cz)]
+        (if (fit machine cubez)
+          (if (seq stls)
+            (recur stls buffer machine cz)
+            cz)
+          d)))))
 
 (s/defn collect :- m/STL
   [machine :- m/Vertex
