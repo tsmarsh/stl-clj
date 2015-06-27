@@ -150,6 +150,9 @@
       (is (= expected (t/combine [stl stl]))))))
 
 (deftest normalizing
+  (testing "does nothing on empty list"
+    (is (= [] (t/normalize []))))
+  
   (testing "takes a list of faces and create a list of facets"
     (let [stl [[[1.0 8.0 3.0]
                  [4.0 5.0 9.0]
