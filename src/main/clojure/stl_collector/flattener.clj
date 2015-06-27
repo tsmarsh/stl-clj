@@ -10,11 +10,29 @@
             (filter (partial > 0 ))
             count)))
 
-(s/defn collect :- m/STL
+(s/defn package :- [m/Face]
+  [[s & stls] :- [m/STL]
+   buffer :- Double
+   machine :- m/Vertex
+   d :- [m/Face]]
+  (let [sf (t/facify s)
+        dx (t/distribute-x [d sf] buffer)
+        c (t/combine dx)
+        cube (t/bounding-cube c)]
+    (if (fit machine cube)
+      (if (seq stls)
+        (recur stls buffer machine c)
+        c)
+      d)))
+
+(s/defn collect :- [m/Face]
   [machine :- m/Vertex
-   stls :- [m/STL]]
-  (let [faces (t/facify (first stls))
+   buffer :- Double
+   [f & stls] :- [m/STL]]
+  (let [faces (t/facify f)
         cube (t/bounding-cube faces)]
     (if (fit machine cube) 
-      (first stls)
-      [])))
+              (if (seq stls)
+                (package stls buffer machine faces)
+                faces)
+              [])))
