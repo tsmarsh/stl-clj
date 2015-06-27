@@ -35,9 +35,26 @@
           buffer 5.0]
       (is (= [] (f/collect machine buffer [stl]))))))
 
-(deftest foo
+(deftest x-axis
   (testing "distributes two stl across the x axis"
     (let [machine [45.0 20.0 20.0]
           buffer 5.0
           expected (t/normalize (t/combine (t/distribute-x (repeat 2 (t/facify stl)) buffer)))]
-      (is (= expected (f/collect machine buffer [stl stl]))))))
+      (is (= expected (f/collect machine buffer [stl stl])))))
+  (testing "distributes three stl across the x axis"
+    (let [machine [70.0 20.0 20.0]
+          buffer 5.0
+          expected (t/normalize (t/combine (t/distribute-x (repeat 3 (t/facify stl)) buffer)))]
+      (is (= expected (f/collect machine buffer [stl stl stl]))))))
+
+(deftest z-axis
+  (testing "distributes two stl across the z axis"
+    (let [machine [20.0 20.0 45.0]
+          buffer 5.0
+          expected (t/normalize (t/combine (t/distribute-z (repeat 2 (t/facify stl)) buffer)))]
+      (is (= expected (f/collect machine buffer [stl stl])))))
+  (testing "distributes three stl across the z axis"
+    (let [machine [20.0 20.0 70.0]
+          buffer 5.0
+          expected (t/normalize (t/combine (t/distribute-z (repeat 3 (t/facify stl)) buffer)))]
+      (is (= expected (f/collect machine buffer [stl stl stl]))))))
