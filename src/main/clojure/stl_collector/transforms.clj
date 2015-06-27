@@ -52,18 +52,20 @@
   [vertex :- [[m/Face]]
    gap :- Double
    dimension :- s/Int]
-  (loop [[m1 m2 & ms] vertex
-         offset 0
-         stl [m1]]
-    (let [width (get (bounding-cube m1) dimension)
-          offset' (+ offset width gap)
-          translation-matrix  (assoc [0.0 0.0 0.0] dimension offset')
-          m2' (translate m2 translation-matrix)]
-      (if (seq ms)
-        (recur (cons m2' ms)
-               offset'
-               (conj stl m2'))
-        (conj stl m2')))))
+  (if (= (count vertex) 1)
+    vertex
+    (loop [[m1 m2 & ms] vertex
+           offset 0
+           stl [m1]]
+      (let [width (get (bounding-cube m1) dimension)
+            offset' (+ offset width gap)
+            translation-matrix  (assoc [0.0 0.0 0.0] dimension offset')
+            m2' (translate m2 translation-matrix)]
+        (if (seq ms)
+          (recur (cons m2' ms)
+                 offset'
+                 (conj stl m2'))
+          (conj stl m2'))))))
 
 (s/defn distribute-x :- [[m/Face]]
   [vertex :- [[m/Face]]

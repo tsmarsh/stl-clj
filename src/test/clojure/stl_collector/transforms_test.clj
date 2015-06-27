@@ -131,6 +131,7 @@
                       [[[1.0 8.0 24.0] [4.0 5.0 30.0] [7.0 2.0 27.0]]
                        [[2.0 9.0 25.0] [5.0 6.0 28.0] [8.0 3.0 28.0]]]]]
 
+      (is (= [stl] (t/distribute-x [stl] 1.0)))
       (is (= expected-x (t/distribute-x [stl stl] 1.0)))
       (is (= expected-z (t/distribute-z [stl stl stl stl] 1.0))))))
 
@@ -149,6 +150,9 @@
       (is (= expected (t/combine [stl stl]))))))
 
 (deftest normalizing
+  (testing "does nothing on empty list"
+    (is (= [] (t/normalize []))))
+  
   (testing "takes a list of faces and create a list of facets"
     (let [stl [[[1.0 8.0 3.0]
                  [4.0 5.0 9.0]
