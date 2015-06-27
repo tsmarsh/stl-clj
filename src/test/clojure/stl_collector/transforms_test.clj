@@ -37,85 +37,85 @@
       (is (= [0.0 0.0 0.0] (t/maxima vertices)))))
   (testing "a maximum"
     (let [vertices [[[1.0 8.0 3.0]
-                      [4.0 5.0 9.0]
-                      [7.0 2.0 6.0]]]]
+                     [4.0 5.0 9.0]
+                     [7.0 2.0 6.0]]]]
       (is (= [7.0 8.0 9.0] (t/maxima vertices))))))
 
 (deftest minimum
   (testing "no minimum"
     (let [vertices [[[0.0 0.0 0.0]
-                      [0.0 0.0 0.0]
-                      [0.0 0.0 0.0]]]]
+                     [0.0 0.0 0.0]
+                     [0.0 0.0 0.0]]]]
       (is (= [0.0 0.0 0.0] (t/minima vertices)))))
   
   (testing "a minimum"
     (let [vertices [[[1.0 8.0 3.0]
-                      [4.0 5.0 9.0]
-                      [7.0 2.0 6.0]]]]
+                     [4.0 5.0 9.0]
+                     [7.0 2.0 6.0]]]]
       (is (= [1.0 2.0 3.0] (t/minima vertices))))))
 
 (deftest translation
   (testing "can move a model in the x axis"
     (let [vertices  [[[1.0 8.0 3.0]
-                       [4.0 5.0 9.0]
-                       [7.0 2.0 6.0]]]
+                      [4.0 5.0 9.0]
+                      [7.0 2.0 6.0]]]
           expected [[[4.0 8.0 3.0]
-                      [7.0 5.0 9.0]
-                      [10.0 2.0 6.0]]]]
+                     [7.0 5.0 9.0]
+                     [10.0 2.0 6.0]]]]
       (is (= expected
              (t/translate vertices [3.0 0.0 0.0])))))
 
   (testing "can move a model in the y axis"
     (let [vertices [[[1.0 8.0 3.0]
-                      [4.0 5.0 9.0]
-                      [7.0 2.0 6.0]]]
+                     [4.0 5.0 9.0]
+                     [7.0 2.0 6.0]]]
           expected [[[1.0 11.0 3.0]
-                      [4.0 8.0 9.0]
-                      [7.0 5.0 6.0]]]]
+                     [4.0 8.0 9.0]
+                     [7.0 5.0 6.0]]]]
       (is (= expected
              (t/translate vertices [0.0 3.0 0.0])))))
   
   (testing "can move a model in the z axis"
     (let [vertices [[[1.0 8.0 3.0]
-                      [4.0 5.0 9.0]
-                      [7.0 2.0 6.0]]]
+                     [4.0 5.0 9.0]
+                     [7.0 2.0 6.0]]]
           expected [[[1.0 8.0 6.0]
-                      [4.0 5.0 12.0]
-                      [7.0 2.0 9.0]]]]
+                     [4.0 5.0 12.0]
+                     [7.0 2.0 9.0]]]]
       (is (= expected
              (t/translate vertices [0.0 0.0 3.0]))))))
 
 (deftest dimensional
   (testing "can find the bounding dimensions"
     (let  [vertices [[[1.0 8.0 3.0]
-                       [4.0 5.0 9.0]
-                       [7.0 2.0 6.0]]]
+                      [4.0 5.0 9.0]
+                      [7.0 2.0 6.0]]]
            expected [[1.0 2.0 3.0] [7.0 8.0 9.0]]]
       (is (= expected (t/dimensions vertices))))))
 
 (deftest bounding
   (testing "can find the smallest cube that can wrap this object"
     (let [vertices [[[1.0 8.0 3.0]
-                      [4.0 5.0 9.0]
-                      [7.0 2.0 6.0]]]
-            expected [6.0 6.0 6.0]]
-        (is (= expected (t/bounding-cube vertices))))))
+                     [4.0 5.0 9.0]
+                     [7.0 2.0 6.0]]]
+          expected [6.0 6.0 6.0]]
+      (is (= expected (t/bounding-cube vertices))))))
 
 (deftest distribution
   (testing "can distribute two stl files across and axis"
     (let [stl [[[1.0 8.0 3.0]
-                 [4.0 5.0 9.0]
-                 [7.0 2.0 6.0]]]
+                [4.0 5.0 9.0]
+                [7.0 2.0 6.0]]]
           expected [[[[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]]
                     [[[8.0 8.0 3.0] [11.0 5.0 9.0] [14.0 2.0 6.0]]]]]
       (is (= expected (t/distribute-x [stl stl] 1.0)))))
   (testing "can distribute N stl across an axis"
     (let [stl [[[1.0 8.0 3.0]
-                 [4.0 5.0 9.0]
-                 [7.0 2.0 6.0]]
+                [4.0 5.0 9.0]
+                [7.0 2.0 6.0]]
                [[2.0 9.0 4.0]
-                 [5.0 6.0 7.0]
-                 [8.0 3.0 7.0]]]
+                [5.0 6.0 7.0]
+                [8.0 3.0 7.0]]]
 
           expected-x [[[[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]
                        [[2.0 9.0 4.0] [5.0 6.0 7.0] [8.0 3.0 7.0]]]
@@ -138,8 +138,8 @@
 (deftest combine
   (testing "combines multiple stl files into one"
     (let [stl [[[1.0 8.0 3.0]
-                 [4.0 5.0 9.0]
-                 [7.0 2.0 6.0]]]
+                [4.0 5.0 9.0]
+                [7.0 2.0 6.0]]]
           expected [[[1.0 8.0 3.0]
                      [4.0 5.0 9.0]
                      [7.0 2.0 6.0]]
@@ -155,11 +155,11 @@
   
   (testing "takes a list of faces and create a list of facets"
     (let [stl [[[1.0 8.0 3.0]
-                 [4.0 5.0 9.0]
-                 [7.0 2.0 6.0]]
+                [4.0 5.0 9.0]
+                [7.0 2.0 6.0]]
                [[2.0 9.0 4.0]
-                 [5.0 6.0 7.0]
-                 [8.0 3.0 7.0]]]]
+                [5.0 6.0 7.0]
+                [8.0 3.0 7.0]]]]
       (is (= [{:normal [27.0 27.0 0.0],
                :vertices [[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]}
               {:normal [9.0 9.0 0.0],
