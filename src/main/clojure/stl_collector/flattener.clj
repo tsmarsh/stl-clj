@@ -25,14 +25,14 @@
         c)
       d)))
 
-(s/defn collect :- [m/Face]
+(s/defn collect :- m/STL
   [machine :- m/Vertex
    buffer :- Double
    [f & stls] :- [m/STL]]
   (let [faces (t/facify f)
         cube (t/bounding-cube faces)]
-    (if (fit machine cube) 
-              (if (seq stls)
-                (package stls buffer machine faces)
-                faces)
-              [])))
+    (t/normalize (if (fit machine cube) 
+                    (if (seq stls)
+                      (package stls buffer machine faces)
+                      faces)
+                    []))))

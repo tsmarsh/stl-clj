@@ -12,9 +12,9 @@
 (def stl (->> "stl/cube.stl"
               io/resource
               io/file
-              r/read-stl))
-
-(def faces (t/facify stl))
+              r/read-stl
+              t/facify
+              t/normalize))
 
 (deftest fitting
   (testing "does fit"
@@ -28,7 +28,7 @@
 (deftest collecting
   (testing "returns the originial stl if it fits"
     (let [machine [21.0, 21.0, 21.0]]
-      (is (= (t/facify stl) (f/collect machine 0.0 [stl])))))
+      (is (= stl (f/collect machine 0.0 [stl])))))
 
   (testing "return an empty list if the stl doesn't fit"
     (let [machine [19.0, 19.0, 19.0]
@@ -39,5 +39,5 @@
   (testing "distributes two stl across the x axis"
     (let [machine [45.0 20.0 20.0]
           buffer 5.0
-          expected (t/combine (t/distribute-x (repeat 2 (t/facify stl)) buffer))]
+          expected (t/normalize (t/combine (t/distribute-x (repeat 2 (t/facify stl)) buffer)))]
       (is (= expected (f/collect machine buffer [stl stl]))))))
