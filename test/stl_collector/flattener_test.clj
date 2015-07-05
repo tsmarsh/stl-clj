@@ -18,4 +18,10 @@
 
 (deftest collect
   (testing "if the stl fits"
-    (is (= stl (f/collect [40.0 40.0 40.0] 5.0 [stl])))))
+    (is (= stl (f/collect [40.0 40.0 40.0] 5.0 [stl]))))
+
+  (testing "works for N"
+    (is  (= 48 (count (f/collect [50.0 50.0 50.0] 5.0 [stl stl stl stl])))))
+
+  (testing "works for N"
+    (is  (= 48 (count (f/collect [50.0 50.0 50.0] 5.0 [stl stl stl stl stl]))))))
