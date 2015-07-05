@@ -7,7 +7,8 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [net.mikera/core.matrix "0.35.0"]
                  [nio "1.0.3"]
-                 [prismatic/schema "0.4.3"]]
+                 [prismatic/schema "0.4.3"]
+                 [packager "0.1.0"]]
 
   :plugins [[lein-cloverage "1.0.6"]
             [lein-cljfmt "0.1.12"]])

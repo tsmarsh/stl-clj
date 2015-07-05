@@ -16,45 +16,28 @@
               t/facify
               t/normalize))
 
-(deftest fitting
-  (testing "does fit"
-    (let [machine [20.0 20.0 20.0]]
-      (is (f/fit machine [20.0 20.0 20.0]))))
+(deftest merge-to-list
+  (testing "empty keys returns empty map"
+    (is (= {} (f/merge-to-list [] []))))
   
-  (testing "doesn't fit"
-    (let [machine [19.0 20.0 20.0]]
-      (is (not (f/fit machine [20.0 20.0 20.0]))))))
+  (testing "one key value pairs returns a map with a list"
+    (is (= {:a [5]} (f/merge-to-list [:a] [5]))))
 
-(deftest collecting
-  (testing "returns the originial stl if it fits"
-    (let [machine [21.0, 21.0, 21.0]]
-      (is (= stl (f/collect machine 0.0 [stl])))))
+  (testing "two key values pairs returns two map entries with lists"
+    (is (= {:a [5] :b [5]} (f/merge-to-list [:a :b] [5 5]))))
 
-  (testing "return an empty list if the stl doesn't fit"
-    (let [machine [19.0, 19.0, 19.0]
-          buffer 5.0]
-      (is (= [] (f/collect machine buffer [stl]))))))
+  (testing "two key values pairs with same key becomes map entry with list"
+    (is (= {:a [5 5]} (f/merge-to-list [:a :a] [5 5])))))
 
-(deftest x-axis
-  (testing "distributes two stl across the x axis"
-    (let [machine [45.0 20.0 20.0]
-          buffer 5.0
-          expected (t/normalize (t/combine (t/distribute-x (repeat 2 (t/facify stl)) buffer)))]
-      (is (= expected (f/collect machine buffer [stl stl])))))
-  (testing "distributes three stl across the x axis"
-    (let [machine [70.0 20.0 20.0]
-          buffer 5.0
-          expected (t/normalize (t/combine (t/distribute-x (repeat 3 (t/facify stl)) buffer)))]
-      (is (= expected (f/collect machine buffer [stl stl stl]))))))
+(deftest find-and-extract
+  (testing "returns nil and the map if no value found"
+    (is (= [nil {}] (f/find-and-extract {} :a))))
 
-(deftest z-axis
-  (testing "distributes two stl across the z axis"
-    (let [machine [20.0 20.0 45.0]
-          buffer 5.0
-          expected (t/normalize (t/combine (t/distribute-z (repeat 2 (t/facify stl)) buffer)))]
-      (is (= expected (f/collect machine buffer [stl stl])))))
-  (testing "distributes three stl across the z axis"
-    (let [machine [20.0 20.0 70.0]
-          buffer 5.0
-          expected (t/normalize (t/combine (t/distribute-z (repeat 3 (t/facify stl)) buffer)))]
-      (is (= expected (f/collect machine buffer [stl stl stl]))))))
+  (testing "returns the value and the map with the value removed"
+    (is (= [5 {}] (f/find-and-extract {:a [5]} :a))))
+
+  (testing "returns the value and the map with the value removed if there is a list of values"
+    (is (= [5 {:a [3]}] (f/find-and-extract {:a [5 3]} :a))))
+
+  (testing "returns the value and the map"
+    (is (= [5 {:b [3]}] (f/find-and-extract {:a [5] :b [3]} :a)))))
