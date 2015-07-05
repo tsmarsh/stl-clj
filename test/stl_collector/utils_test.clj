@@ -1,4 +1,4 @@
-(ns stl-collector.util-test
+(ns stl-collector.utils-test
   (:require [stl-collector.utils :as u]
             [clojure.test :refer :all]))
 
