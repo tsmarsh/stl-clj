@@ -10,7 +10,7 @@
 
 (s/defn create-empty-container :- c/Container
   [[mx _ mz] :- m/Vertex]
-  {:boxes []
+  {:shelves []
    :dimensions [mx mz]})
 
 (s/defn build-cubes :- [m/Vertex]
@@ -42,8 +42,18 @@
         boxes->stl (u/merge-to-list boxes stls)
         filled-container (fill-container (create-empty-container machine) boxes)
         distribution (d/distribute filled-container)]
-    (loop [[b & bs] boxes
-           boxes->stl boxes->stl
-           distribution distribution]
-      #_(let [[stl boxes->stl]
-            (u/find-and-extract boxes->stl) box]))))
+    (t/normalize (t/combine (loop [[b & bs] boxes
+                                   boxes->stl boxes->stl
+                                   distribution distribution
+                                   faces []]
+                              (if b 
+                                (let [[stl boxes->stl'] (u/find-and-extract boxes->stl b)
+                                      [[dx dz :as t] distribution'] (u/find-and-extract distribution b)]
+                                  (if t
+                                    (let [face (t/translate (t/facify stl) [dx 0.0 dz])
+                                          faces' (conj faces face)] 
+                                      (if (seq distribution)
+                                        (recur bs boxes->stl' distribution' faces')
+                                         faces))
+                                    (recur bs boxes->stl' distribution faces)))
+                                faces))))))

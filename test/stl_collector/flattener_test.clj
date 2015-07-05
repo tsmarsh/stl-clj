@@ -15,3 +15,7 @@
               r/read-stl
               t/facify
               t/normalize))
+
+(deftest collect
+  (testing "if the stl fits"
+    (is (= stl (f/collect [40.0 40.0 40.0] 5.0 [stl])))))
