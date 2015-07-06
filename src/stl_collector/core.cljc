@@ -1,13 +1,20 @@
 (ns stl-collector.core
   (:require [stl-collector.reader :as r]
             [stl-collector.writer :as w]
-            [stl-collector.transforms :as t]))
+            [stl-collector.flattener :as f]
+            [clojure.java.io :as io]))
 
+(def micro3D [75.0 75.0 75.0])
+(def maker [252.0 199.0 150.0])
 
-(defn combine-files [output & filenames]
-  (let [stls (map r/read-stl filenames)
-        faces (map t/facify stls)
-        distributed-faces (t/distribute-x faces 10)
-        recombined-faces (t/combine distributed-faces)
-        normalized-faces (t/normalize recombined-faces)]
-    (w/write-stl normalized-faces output)))
+(def buffer 5.0)
+
+(defn get-stl-files [dir]
+  (map #(.getAbsolutePath %)
+       (filter #(.endsWith (.getName %) ".stl")
+               (file-seq (io/file dir)))))
+
+(defn combine-files [output dir]
+  (let [stls (map r/read-stl (get-stl-files dir))
+        stl (f/collect maker buffer stls)]
+    (w/write-stl stl output)))

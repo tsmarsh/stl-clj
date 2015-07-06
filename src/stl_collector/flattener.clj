@@ -9,9 +9,9 @@
 
 
 (s/defn create-empty-container :- c/Container
-  [[mx _ mz] :- m/Vertex]
+  [[mx my _] :- m/Vertex]
   {:shelves []
-   :dimensions [mx mz]})
+   :dimensions [mx my]})
 
 (s/defn build-cubes :- [m/Vertex]
   [stls :- [m/STL]]
@@ -20,7 +20,7 @@
 (s/defn build-buffered-boxes :- [b/Box]
   [cubes :- [m/Vertex]
    buffer :- Double]
-  (map (fn [[w _ h]]
+  (map (fn [[w h _]]
          [(+ buffer w) (+ buffer h)])
        cubes))
 
@@ -50,7 +50,7 @@
                                 (let [[stl boxes->stl'] (u/find-and-extract boxes->stl b)
                                       [[dx dz :as t] distribution'] (u/find-and-extract distribution b)]
                                   (if t
-                                    (let [face (t/translate (t/facify stl) [dx 0.0 dz])
+                                    (let [face (t/translate (t/facify stl) [dx dz 0.0])
                                           faces' (conj faces face)] 
                                       (if (seq distribution)
                                         (recur bs boxes->stl' distribution' faces')
