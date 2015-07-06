@@ -17,22 +17,25 @@ library.
 
 ## Usage
 
-This code takes filenames as input, reads in the stl files,
-distributes them across the x axis with a 10 gap, then combines them
-into a single file.
+The primary use case for this library is taking a directory of Binary STL files and turning them into a single STL file to reduce the need for baby sitting.
+
+The machine is just the printable area defined as a width, depth, height in millimeters: [w d h]
+
+The buffer is added as a border to each file to prevent them touching, values between 1.0 and 5.0 have worked well for me.
+
+Output is the absolute path to the destination file.
+
+Dir is directory containing the stl files.
+
 
 ```
-(defn combine-files [output & filenames]
-  (let [stls (map r/read-stl filenames)
-        faces (map t/facify stls)
-        distributed-faces (t/distribute-x faces 10)
-        recombined-faces (t/combine distributed-faces)
-        normalized-faces (t/normalize recombined-faces)]
-    (w/write-stl normalized-faces output)))
+(combine [75.0 75.0 75.0] 0.0 "/path/to/output.stl" "/path/to/input/stl")
 ```
 
 It is possible that more convienience functions like this will emerge
 as more real world use happens.
+
+Whilst it is trivial to use this now if you are a clojure developer, the primary function of this library is to back an application with a more humane interface.
 
 ## License
 Copyright © 2015 T S MARSH
