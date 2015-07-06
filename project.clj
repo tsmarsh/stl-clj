@@ -1,9 +1,8 @@
 (defproject stl-collector "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+  :description "Library for collecting multiple STL files into a single STL file"
   :url "http://tailoredshapes.com/"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
-
+  :license {:name "BSD"
+            :url "http://opensource.org/licenses/BSD-2-Clause"}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [net.mikera/core.matrix "0.35.0"]
                  [nio "1.0.3"]
