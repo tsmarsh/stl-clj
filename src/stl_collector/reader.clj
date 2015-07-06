@@ -32,6 +32,10 @@
                  (.order ByteOrder/LITTLE_ENDIAN))]
     (let [num_facets (read-header buffer)]
       (for [n (range num_facets)]
-        (read-facet buffer
-                    (+ stl-file/HEADER_LENGTH
-                       (* n stl-file/BYTES_PER_FACET)))))))
+        (try 
+          (read-facet buffer
+                      (+ stl-file/HEADER_LENGTH
+                         (* n stl-file/BYTES_PER_FACET)))
+          (catch Exception e
+            (println "Trouble reading: " filename (.getMessage e))
+            []))))))
