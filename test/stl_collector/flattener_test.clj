@@ -24,4 +24,10 @@
     (is  (= 48 (count (f/collect [50.0 50.0 50.0] 5.0 [stl stl stl stl])))))
 
   (testing "works for N"
-    (is  (= 48 (count (f/collect [50.0 50.0 50.0] 5.0 [stl stl stl stl stl]))))))
+    (is  (= 48 (count (f/collect [50.0 50.0 50.0] 5.0 [stl stl stl stl stl])))))
+
+  (testing "keeps track of rejected"
+    (is  (= [stl] (:rejections (f/collect-with-rejections
+                                [50.0 50.0 50.0]
+                                5.0
+                                [stl stl stl stl stl]))))))
