@@ -16,3 +16,7 @@
              into
              key-pairs)
       {})))
+
+(defn flatten-to-list
+  [m]
+  (flatten (vals m)))
