@@ -40,13 +40,13 @@
         (.put buffer (byte 0))
         (.putFloat buffer v)
         (.put buffer (byte 0)))
-      
+
       (let [buffer (doto
                     (nio.core/mmap f)
                      (.order ByteOrder/LITTLE_ENDIAN))]
         (doseq [_ (range 2)]
           (.get buffer))
-        
+
         (is (= v (.getFloat buffer)))))))
 
 (deftest test-rw-stl-file

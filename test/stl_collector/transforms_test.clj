@@ -47,7 +47,7 @@
                      [0.0 0.0 0.0]
                      [0.0 0.0 0.0]]]]
       (is (= [0.0 0.0 0.0] (t/minima vertices)))))
-  
+
   (testing "a minimum"
     (let [vertices [[[1.0 8.0 3.0]
                      [4.0 5.0 9.0]
@@ -74,7 +74,7 @@
                      [7.0 5.0 6.0]]]]
       (is (= expected
              (t/translate vertices [0.0 3.0 0.0])))))
-  
+
   (testing "can move a model in the z axis"
     (let [vertices [[[1.0 8.0 3.0]
                      [4.0 5.0 9.0]
@@ -109,7 +109,7 @@
           expected [[[[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]]
                     [[[8.0 8.0 3.0] [11.0 5.0 9.0] [14.0 2.0 6.0]]]]]
       (is (= expected (t/distribute-x [stl stl] 1.0)))))
-  
+
   (testing "can distribute N stl across an axis"
     (let [stl [[[1.0 8.0 3.0]
                 [4.0 5.0 9.0]
@@ -129,7 +129,7 @@
                        [[2.0 17.0 4.0] [5.0 14.0 7.0] [8.0 11.0 7.0]]]
                       [[[1.0 24.0 3.0] [4.0 21.0 9.0] [7.0 18.0 6.0]]
                        [[2.0 25.0 4.0] [5.0 22.0 7.0] [8.0 19.0 7.0]]]]
-          
+
           expected-z [[[[1.0 8.0 3.0] [4.0 5.0 9.0] [7.0 2.0 6.0]]
                        [[2.0 9.0 4.0] [5.0 6.0 7.0] [8.0 3.0 7.0]]]
                       [[[1.0 8.0 10.0] [4.0 5.0 16.0] [7.0 2.0 13.0]]
@@ -152,7 +152,7 @@
           expected [[[1.0 8.0 3.0]
                      [4.0 5.0 9.0]
                      [7.0 2.0 6.0]]
-                    
+
                     [[1.0 8.0 3.0]
                      [4.0 5.0 9.0]
                      [7.0 2.0 6.0]]]]
@@ -161,7 +161,7 @@
 (deftest normalizing
   (testing "does nothing on empty list"
     (is (= [] (t/normalize []))))
-  
+
   (testing "takes a list of faces and create a list of facets"
     (let [stl [[[1.0 8.0 3.0]
                 [4.0 5.0 9.0]

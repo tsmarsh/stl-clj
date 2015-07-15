@@ -5,7 +5,7 @@
    [clojure.java.io :as io]
    [nio.core :as nio]
    [schema.core :as s])
-  
+
   (:import (java.nio ByteOrder DirectByteBuffer)))
 
 (set! *warn-on-reflection* true)
