@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/tsmarsh/stl-clj.svg?branch=master)](https://travis-ci.org/tsmarsh/stl-clj) 
 
+[![Clojars Project](http://clojars.org/stl-collector/latest-version.svg)](http://clojars.org/stl-collector)
+
 # stl-clj
 
 A Clojure library designed aid the manipulation of STL files.
