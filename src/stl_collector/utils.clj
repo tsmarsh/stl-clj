@@ -1,5 +1,5 @@
 (ns stl-collector.utils)
-                       
+
 (defn find-and-extract
   [m k]
   (let [[v & vs] (get m k)]
