@@ -3,7 +3,6 @@
             [stl-collector.reader :as r]
             [stl-collector.writer :as w]
             [stl-collector.core :as c]
-            [nio.core :as nio]
             [clojure.java.io :as io]
             [schema.test :as st])
   (:import (java.nio ByteOrder)
@@ -72,5 +71,16 @@
                                io/file)
           ^File output-dir (.toFile (Files/createTempDirectory "test" (into-array FileAttribute [])))]
       (c/combine-all-files machine 5.0 output-dir input-dir)
+      (is (= 3 (count (.listFiles output-dir))))
+      (.delete output-dir))))
+
+(deftest combine
+  (testing "can read a dir of stls and spit them out into a bunch of stl files"
+    (let [machine (double-array [75.0 75.0 75.0])
+          ^File input-dir (->> "stl"
+                               io/resource
+                               io/file)
+          ^File output-dir (.toFile (Files/createTempDirectory "test" (into-array FileAttribute [])))]
+      (stlcollector.Core/combine machine 5.0 output-dir input-dir)
       (is (= 3 (count (.listFiles output-dir))))
       (.delete output-dir))))

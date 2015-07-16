@@ -4,7 +4,8 @@
             [stl-collector.flattener :as f]
             [clojure.java.io :as io])
   (:import (java.io File))
-  (:gen-class :name com.tailoredshapes.stl.Combine))
+  (:gen-class :name stlcollector.Core
+              :methods [#^{:static true} [combine [doubles double java.io.File java.io.File] void]]))
 
 (set! *warn-on-reflection* true)
 
@@ -33,4 +34,4 @@
               (recur (inc file-number) r))))))))
 
 (defn -combine [machine ^Double buffer ^File output-dir ^File input-dir]
-  (combine-all-files machine buffer output-dir input-dir))
+  (combine-all-files (seq machine) buffer output-dir input-dir))
