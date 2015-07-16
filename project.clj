@@ -1,4 +1,4 @@
-(defproject stl-collector "0.2.0-SNAPSHOT"
+(defproject stl-collector "0.2.0"
   :description "Library for collecting multiple STL files into a single STL file"
   :url "http://tailoredshapes.com/"
   :license {:name "BSD"
