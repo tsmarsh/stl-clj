@@ -2,11 +2,14 @@
   (:require [clojure.test :refer :all]
             [stl-collector.reader :as r]
             [stl-collector.writer :as w]
+            [stl-collector.core :as c]
             [nio.core :as nio]
             [clojure.java.io :as io]
             [schema.test :as st])
   (:import (java.nio ByteOrder)
-           (java.io File)))
+           (java.io File)
+           (java.nio.file Files)
+           (java.nio.file.attribute FileAttribute)))
 
 (use-fixtures :once st/validate-schemas)
 
@@ -60,3 +63,14 @@
           new-read-file (r/read-stl tmp-file)]
       (is (= read-file new-read-file))
       (.delete tmp-file)))) 
+
+(deftest combine-all-files
+  (testing "can read a dir of stls and spit them out into a bunch of stl files"
+    (let [machine [75.0 75.0 75.0]
+          ^File input-dir (->> "stl"
+                               io/resource
+                               io/file)
+          ^File output-dir (.toFile (Files/createTempDirectory "test" (into-array FileAttribute [])))]
+      (c/combine-all-files machine 5.0 output-dir input-dir)
+      (is (= 3 (count (.listFiles output-dir))))
+      (.delete output-dir))))
