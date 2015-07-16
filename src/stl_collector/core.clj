@@ -3,10 +3,13 @@
             [stl-collector.writer :as w]
             [stl-collector.flattener :as f]
             [clojure.java.io :as io])
-  (:import (java.io File)))
+  (:import (java.io File))
+  (:gen-class :name com.tailoredshapes.stl.Combine))
+
+(set! *warn-on-reflection* true)
 
 (defn get-stl-files [^File dir]
-  (map #(.getAbsolutePath %)
+  (map (fn [^File f] (.getAbsolutePath f))
        (filter (fn [^File f]
                  (.endsWith (.getName f) ".stl"))
                (file-seq (io/file dir)))))
@@ -28,3 +31,6 @@
             (w/write-stl stl (str output-dir "/" file-number ".stl"))
             (when (seq r)
               (recur (inc file-number) r))))))))
+
+(defn -combine [machine ^Double buffer ^File output-dir ^File input-dir]
+  (combine-all-files machine buffer output-dir input-dir))

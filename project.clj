@@ -9,5 +9,6 @@
                  [prismatic/schema "0.4.3"]
                  [packager "0.1.0"]]
 
+  :aot [stl-collector.core]
   :plugins [[lein-cloverage "1.0.6"]
             [lein-cljfmt "0.1.12"]])
