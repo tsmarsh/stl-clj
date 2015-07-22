@@ -7,7 +7,7 @@
                  [net.mikera/core.matrix "0.35.0"]
                  [nio "1.0.3"]
                  [prismatic/schema "0.4.3"]
-                 [packager "0.1.0"]]
+                 [tsmarsh/packager "0.1.0"]]
 
   :aot [stl-collector.core]
   :plugins [[lein-cloverage "1.0.6"]
