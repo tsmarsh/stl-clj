@@ -1,4 +1,4 @@
-(defproject tsmarsh/stl-collector "0.2.1"
+(defproject tsmarsh/stl-collector "0.2.2"
   :description "Library for collecting multiple STL files into a single STL file"
   :url "http://tailoredshapes.com/"
   :license {:name "BSD"
