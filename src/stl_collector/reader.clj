@@ -1,6 +1,6 @@
 (ns stl-collector.reader
   (:require
-    [clojure.core.matrix :as mx]
+   [clojure.core.matrix :as mx]
    [stl-collector.model :as m]
    [stl-collector.file :as stl-file]
    [nio.core :as nio]
