@@ -27,10 +27,9 @@
 (s/defn fill-container :- c/Container
   [container :- c/Container
    boxes :- [b/Box]]
-  (let [sorted-boxes (sort-by (fn [[x y]] (- (* x y))) boxes)]
-    (reduce (fn [cnt box] (c/add cnt box))
-            container
-            sorted-boxes)))
+  (reduce (fn [cnt box] (c/add cnt box))
+          container
+          boxes))
 
 (s/defn collect-with-rejections :- {:stl        m/STL
                                     :rejections [m/STL]}
