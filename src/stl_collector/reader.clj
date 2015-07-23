@@ -1,8 +1,8 @@
 (ns stl-collector.reader
   (:require
+    [clojure.core.matrix :as mx]
    [stl-collector.model :as m]
    [stl-collector.file :as stl-file]
-   [clojure.java.io :as io]
    [nio.core :as nio]
    [schema.core :as s])
 
@@ -23,7 +23,7 @@
    offset :- s/Int]
   (let [normal    (read-vector buffer offset)
         new_offset (+ offset 12)
-        vertices  (for [n (range 3)] (read-vector buffer (+ new_offset (* 12 n))))]
+        vertices (mx/matrix (for [n (range 3)] (read-vector buffer (+ new_offset (* 12 n)))))]
     {:normal normal :vertices vertices}))
 
 (s/defn read-stl :- m/STL
