@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/tsmarsh/stl-clj.svg?branch=master)](https://travis-ci.org/tsmarsh/stl-clj) 
-
+[![Coverage Status](https://coveralls.io/repos/tsmarsh/stl-clj/badge.svg?branch=master&service=github)](https://coveralls.io/github/tsmarsh/stl-clj?branch=master)
 [![Clojars Project](http://clojars.org/stl-collector/latest-version.svg)](http://clojars.org/stl-collector)
 
 # stl-clj
